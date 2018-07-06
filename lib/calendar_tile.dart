@@ -40,16 +40,7 @@ class CalendarTile extends StatelessWidget {
     return new InkWell(
       onTap: onDateSelected,
       child: isSelected ?Container(
-//        margin: EdgeInsets.all(3.0),
-//        elevation: 5.0,
-//      decoration: BoxDecoration(
-//        boxShadow: [
-//          BoxShadow(color: Color.fromRGBO(73, 103, 185, 1.0))
-//        ],
-        color: Color.fromRGBO(242, 243, 246, 1.0),
-//      ),
-
-//        shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(10.0),bottomLeft: Radius.circular(10.0))),
+        color: const Color.fromRGBO(242, 243, 246, 1.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -85,8 +76,7 @@ class CalendarTile extends StatelessWidget {
                 ),
               ),
             ),
-            isSelected
-                ? Container(
+            Container(
               color: Colors.white,
               child: new Container(
                 height: 10.0,
@@ -102,10 +92,6 @@ class CalendarTile extends StatelessWidget {
                   ],
                 ),
               ),
-            )
-                : new Container(
-              height: 10.0,
-              color: Colors.white,
             )
           ],
         ),
