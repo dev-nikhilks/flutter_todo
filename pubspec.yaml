@@ -11,6 +11,7 @@ dependencies:
   intl: 0.15.0
   tuple: 1.0.1
   date_utils: 0.0.1
+  date_format: "^1.0.4"
 
 dev_dependencies:
   flutter_test:

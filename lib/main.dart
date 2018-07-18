@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/calendar.dart';
-
+import 'package:todo_app/add_task.dart';
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
@@ -13,24 +13,26 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.purple,
           fontFamily: 'OpenSans-Light'
       ),
-      home: new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Flutter Calendar'),
-        ),
-        body: new Container(
-          height: double.infinity,
-          color: Colors.white,
+home: AddTask(),
+//      home: new Scaffold(
+//        appBar: new AppBar(
+//          title: new Text('Flutter Calendar'),
+//        ),
+//        body: new Container(
+//          height: double.infinity,
+//          color: Colors.white,
+//
+//          child: new ListView(
+//            shrinkWrap: true,
+//            children: <Widget>[
+//              new Calendar(
+//                onDateSelected: (date) => print(date),
+//              ),
+//            ],
+//          ),
+//        ),
+//      ),
 
-          child: new ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              new Calendar(
-                onDateSelected: (date) => print(date),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
