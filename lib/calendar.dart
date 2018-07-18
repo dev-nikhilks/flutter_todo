@@ -14,9 +14,7 @@ class Calendar extends StatefulWidget {
   final ValueChanged<Tuple2<DateTime, DateTime>> onSelectedRangeChange;
   final bool isExpandable;
   final DayBuilder dayBuilder;
-  final bool showChevronsToChangeRange;
   final bool showTodayAction;
-  final bool showCalendarPickerIcon;
 
   Calendar({
     this.onDateSelected,
@@ -24,8 +22,6 @@ class Calendar extends StatefulWidget {
     this.isExpandable: false,
     this.dayBuilder,
     this.showTodayAction: false,
-    this.showChevronsToChangeRange: false,
-    this.showCalendarPickerIcon: false,
   });
 
   @override
