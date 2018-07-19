@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_app/DatabaseHelper.dart';
 import 'package:todo_app/calendar.dart';
 import 'package:todo_app/todo_itemlsit.dart';
@@ -12,21 +13,22 @@ Future main() async {
   List notes;
   var db = new DatabaseHelper();
 
-//  await db.saveTask(new TodoTable("2018-07-16", "Flutter Tutorials",
+//  await db.saveTask(new TodoTable("19/07/2018", "Flutter Tutorials",
 //      0xFFF44336, "Create SQLite Tutorial"));
-//  await db.saveTask(new TodoTable("2018-07-16", "Android Development",
+//  await db.saveTask(new TodoTable("19/07/2018", "Android Development",
 //      0xFFF44336, "Build Firebase Android Apps"));
-//  await db.saveTask(new TodoTable("2018-07-16", "Mobile App R&D",
+//  await db.saveTask(new TodoTable("19/07/2018", "Mobile App R&D",
 //      0xFFF44336, "Research more cross-flatforms"));
 
-  print('=== getAllNotes() ===');
-  notes = await db.getAllTasks();
-  notes.forEach((note) => print(note));
-  await db.close();
+//  print('=== getAllNotes() ===');
+//  notes = await db.getAllTasks();
+//  notes.forEach((note) => print(note));
+//  await db.close();
 }
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  var db = new DatabaseHelper();
   @override
   MyAppState createState() {
     return new MyAppState();
@@ -34,7 +36,19 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  DateTime selectedDate;
+  String selectedDate;
+  static final DateFormat _dbDateFormat = new DateFormat("dd/MM/yyyy");
+  static final DateFormat _dateFormat = new DateFormat("EEE, MMM d, ''yy");
+  List<TodoTable> table = null;
+
+  searchTasks(String date) {
+    widget.db.getTasks(date).then((onValue) {
+      setState(() {
+        selectedDate = date;
+        table = onValue;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +66,16 @@ class MyAppState extends State<MyApp> {
                 shrinkWrap: true,
                 children: <Widget>[
                   new Calendar(
-                    onDateSelected: (date) {
+                    onDateSelected: (DateTime date) {
                       setState(() {
-                        selectedDate = date;
-                        print(selectedDate);
+                        searchTasks(_dbDateFormat.format(date));
                       });
                     },
                   ),
                 ],
               ),
             ),
-            TodoList(selectedDate)
+            new TodoList(table,selectedDate)
           ],
         )),
       ),
@@ -72,6 +85,6 @@ class MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    selectedDate = DateTime.now();
+    selectedDate = _dbDateFormat.format(DateTime.now());
   }
 }

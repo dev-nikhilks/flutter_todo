@@ -59,7 +59,7 @@ class DatabaseHelper {
 //        columns: [columnId, columnDate, columnTask,columnColor,columnCategory],
 //        where: '$columnId = ?',
 //        whereArgs: [id]);
-    var result = await dbClient.rawQuery('SELECT * FROM $tableTodo WHERE $columnDate = 2018-07-16');
+    var result = await dbClient.rawQuery('SELECT * FROM $tableTodo WHERE $columnDate = "$date"');
 
     if (result.length > 0) {
       List<TodoTable> table = [];
@@ -70,6 +70,11 @@ class DatabaseHelper {
 
     }
     return null;
+  }
+
+  Future<int> getCount(String date) async {
+    var dbClient = await db;
+    return Sqflite.firstIntValue(await dbClient.rawQuery('SELECT COUNT(*) FROM $tableTodo WHERE $columnDate = $date' ));
   }
 
   Future close() async {
@@ -84,10 +89,15 @@ class TodoTable {
   int _id;
   String _date;
   String _todoTask;
-  int _color;
   String _category;
+  String _time;
 
-  TodoTable(this._date, this._todoTask, this._color, this._category);
+  int _color;
+  int _isDone;
+
+  TodoTable(this._id, this._date, this._todoTask, this._category, this._time,
+      this._color, this._isDone);
+
 
   int get color => _color;
 
@@ -99,12 +109,18 @@ class TodoTable {
 
   String get category => _category;
 
+  int get isDone => _isDone;
+
+  String get time => _time;
+
   TodoTable.map(dynamic obj){
     this._id = obj['id'];
     this._date = obj['date'];
     this._todoTask = obj['task'];
     this._color = obj['color'];
     this._category = obj['category'];
+    this._time = obj['time'];
+    this._isDone = obj['isDone'];
   }
 
   Map<String, dynamic> toMap() {
@@ -116,6 +132,8 @@ class TodoTable {
     map['task'] = todoTask;
     map['color'] = color;
     map['category'] = category;
+    map['time'] = _time;
+    map['isDone'] = _isDone;
     return map;
   }
 
@@ -125,6 +143,8 @@ class TodoTable {
     this._todoTask = map['task'];
     this._color = map['color'];
     this._category = map['category'];
+    this._time = map['time'];
+    this._isDone = map['isDone'];
   }
 
 }

@@ -1,105 +1,201 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_app/DatabaseHelper.dart';
 import 'package:todo_app/constants.dart';
 
-class TodoList extends StatefulWidget {
-  DateTime selectedDate;
-  var db = new DatabaseHelper();
+//class TodoList extends StatefulWidget {
+//  String _selectedDate;
+//  var db = new DatabaseHelper();
+//
+//  TodoList(this._selectedDate);
+//
+//  @override
+//  TodoListState createState() {
+//    print('INSIDE CREATE STATE');
+//    return new TodoListState();
+//  }
+//}
+//
+//class TodoListState extends State<TodoList> {
+//  static final DateFormat _weekdayFormat = new DateFormat("EEEE");
+//  static final DateFormat _dbDateFormat = new DateFormat("dd/MM/yyyy");
+//  static final DateFormat _dateFormat = new DateFormat("dd MMM yyyy");
+//  String weekDay;
+//  String date;
+//  List<TodoTable> taskList;
+//
+//
+//  searchTasks() {
+//    widget.db.getTasks(widget._selectedDate).then((onValue) {
+//      setState(() {
+//        taskList = onValue;
+//      });
+//    });
+//  }
+//
+//  @override
+//  void initState() {
+//    super.initState();
+//    weekDay = _weekdayFormat.format(_dbDateFormat.parse(widget._selectedDate));
+//    date = _dateFormat.format(_dbDateFormat.parse(widget._selectedDate));
+//    searchTasks();
+//  }
+//
+//  @override
+//  void didUpdateWidget(TodoList oldWidget) {
+//    weekDay = _weekdayFormat.format(_dbDateFormat.parse(widget._selectedDate));
+//    date = _dateFormat.format(_dbDateFormat.parse(widget._selectedDate));
+//    searchTasks();
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//
+////    searchTasks();
+//    return new Column(
+//      crossAxisAlignment: CrossAxisAlignment.start,
+//      children: <Widget>[
+//        Padding(
+//          padding: const EdgeInsets.all(4.0),
+//          child: RichText(
+//            text: TextSpan(
+//                text: weekDay,
+//                style: TextStyle(
+//                  fontFamily: 'OpenSans-Light',
+//                  fontWeight: FontWeight.bold,
+//                  color: Colors.black,
+//                  fontSize: 18.0,
+//                ),
+//                children: [
+//                  TextSpan(
+//                    text: date,
+//                    style: TextStyle(
+//                        fontFamily: 'OpenSans-Light',
+//                        fontWeight: FontWeight.normal,
+//                        color: Colors.black,
+//                        fontSize: 15.0),
+//                  )
+//                ]),
+//          ),
+//        ),
+//        taskList == null
+//            ? Container(
+//                child: new Center(
+//                  child: Text('No Tasks Found'),
+//                ),
+//              )
+//            : SingleChildScrollView(
+//                child: Container(
+//                    child: new Column(
+//                  mainAxisSize: MainAxisSize.max,
+//                  children: todoTaskList
+//                )),
+//              )
+//      ],
+//    );
+//
+//  }
+//
+//  List<Widget> get todoTaskList {
+//
+//    List<Widget> result  = [];
+//
+//    taskList.forEach((item) {
+//      result.add(TodoItem(
+//          item.todoTask,
+//          item.category,
+//          '09:00',
+//          Color(item.color),
+//          false,
+//          false,
+//          true));
+//    });
+//    return result;
+//  }
+//
+//  @override
+//  void deactivate() {
+//    widget.db.close();
+//    super.deactivate();
+//  }
+//}
 
-  TodoList(this.selectedDate);
+class TodoList extends StatelessWidget {
 
-  @override
-  TodoListState createState() {
-    return new TodoListState();
-  }
-}
-
-class TodoListState extends State<TodoList> {
   List<TodoTable> taskList;
+  String selectedDate;
+  static final DateFormat _weekdayFormat = new DateFormat("EEEE");
+  static final DateFormat _dbDateFormat = new DateFormat("dd/MM/yyyy");
+  static final DateFormat _dateFormat = new DateFormat("dd MMM yyyy");
 
-  searchTasks() {
-    widget.db.getTasks(widget.selectedDate.toString()).then((onValue) {
-      setState(() {
-        taskList = onValue;
-      });
-    });
-  }
-
-  @override
-  void initState() {
-    searchTasks();
-  }
+  TodoList(this.taskList, this.selectedDate);
 
   @override
   Widget build(BuildContext context) {
-    return taskList == null
-        ? Container(
-            child: new Center(
-              child: Text('No Tasks Found'),
-            ),
-          )
-        : Container(
-            child: new Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              TodoItem(
-                  'Breakfast with my family ABDCJS DHNCs',
-                  'Personal',
-                  '08:00',
-                  ColorConst.colorItems[
-                      Random().nextInt(ColorConst.colorItems.length)],
-                  false,
-                  true,
-                  false),
-              TodoItem(
-                  'Breakfast with my family',
-                  'Personal',
-                  '12.00',
-                  ColorConst.colorItems[
-                      Random().nextInt(ColorConst.colorItems.length)],
-                  true,
-                  false,
-                  false),
-              TodoItem(
-                  'Breakfast with my family',
-                  'Personal',
-                  '08:00',
-                  ColorConst.colorItems[
-                      Random().nextInt(ColorConst.colorItems.length)],
-                  false,
-                  false,
-                  false),
-              TodoItem(
-                  'Breakfast with my family',
-                  'Personal',
-                  '08:00',
-                  ColorConst.colorItems[
-                      Random().nextInt(ColorConst.colorItems.length)],
-                  false,
-                  false,
-                  false),
-              TodoItem(
-                  'Breakfast with my family',
-                  'Personal',
-                  '08:00',
-                  ColorConst.colorItems[
-                      Random().nextInt(ColorConst.colorItems.length)],
-                  false,
-                  false,
-                  true),
-            ],
-          ));
+    String weekDay = _weekdayFormat.format(_dbDateFormat.parse(selectedDate));
+    String date = _dateFormat.format(_dbDateFormat.parse(selectedDate));
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: RichText(
+            text: TextSpan(
+                text: weekDay,
+                style: TextStyle(
+                  fontFamily: 'OpenSans-Light',
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 18.0,
+                ),
+                children: [
+                  TextSpan(
+                    text: date,
+                    style: TextStyle(
+                        fontFamily: 'OpenSans-Light',
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black,
+                        fontSize: 15.0),
+                  )
+                ]),
+          ),
+        ),
+        taskList == null
+            ? Container(
+                child: new Center(
+                  child: Text('No Tasks Found'),
+                ),
+              )
+            : SingleChildScrollView(
+                child: Container(
+                    child: new Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: todoTaskList
+                )),
+              )
+      ],
+    );
   }
+  List<Widget> get todoTaskList {
 
-  @override
-  void deactivate() {
-    widget.db.close();
+    List<Widget> result  = [];
+
+    taskList.forEach((item) {
+      result.add(TodoItem(
+          item.todoTask,
+          item.category,
+          '09:00',
+          Color(item.color),
+          false,
+          false,
+          true));
+    });
+    return result;
   }
-
-
 }
+
 
 class TodoItem extends StatefulWidget {
   String todo, category, time;
@@ -117,7 +213,8 @@ class _CalendarItemState extends State<TodoItem> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onLongPress: () {
+      onTap: () {
+
         setState(() {
           if (widget.isDone)
             widget.isDone = false;
