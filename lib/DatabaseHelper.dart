@@ -14,6 +14,8 @@ class DatabaseHelper {
   final String columnTask = 'task';
   final String columnColor = 'color';
   final String columnCategory = 'category';
+  final String columnTime = 'time';
+  final String columnIsDone = 'isDone';
 
   DatabaseHelper.internal();
 
@@ -38,7 +40,7 @@ class DatabaseHelper {
 
   void _onCreate(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $tableTodo($columnId INTEGER PRIMARY KEY, $columnDate TEXT, $columnTask TEXT, $columnColor INTEGER, $columnCategory TEXT )');
+        'CREATE TABLE $tableTodo($columnId INTEGER PRIMARY KEY, $columnDate TEXT, $columnTask TEXT, $columnColor INTEGER, $columnCategory TEXT,$columnTime TEXT, $columnIsDone INTEGER )');
   }
 
   Future<int> saveTask(TodoTable todo) async {
@@ -49,25 +51,19 @@ class DatabaseHelper {
 
   Future<List> getAllTasks() async {
     var dbClient = await db;
-    var result = await dbClient.query(tableTodo, columns: [columnId, columnDate, columnTask,columnColor,columnCategory]);
+    var result = await dbClient.query(tableTodo, columns: [columnId, columnDate, columnTask,columnColor,columnCategory,columnTime,columnIsDone]);
     return result.toList();
   }
 
   Future<List<TodoTable>> getTasks(String date) async {
     var dbClient = await db;
-//    List<Map> result = await dbClient.query(tableNote,
-//        columns: [columnId, columnDate, columnTask,columnColor,columnCategory],
-//        where: '$columnId = ?',
-//        whereArgs: [id]);
     var result = await dbClient.rawQuery('SELECT * FROM $tableTodo WHERE $columnDate = "$date"');
-
     if (result.length > 0) {
       List<TodoTable> table = [];
       for(int i=0;i<result.length;i++) {
         table.add(TodoTable.fromMap(result[0]));
       }
       return table;
-
     }
     return null;
   }
@@ -82,7 +78,6 @@ class DatabaseHelper {
     return dbClient.close();
   }
 
-
 }
 
 class TodoTable {
@@ -95,7 +90,7 @@ class TodoTable {
   int _color;
   int _isDone;
 
-  TodoTable(this._id, this._date, this._todoTask, this._category, this._time,
+  TodoTable(this._date, this._todoTask, this._category, this._time,
       this._color, this._isDone);
 
 

@@ -1,9 +1,7 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/DatabaseHelper.dart';
-import 'package:todo_app/constants.dart';
 
 //class TodoList extends StatefulWidget {
 //  String _selectedDate;
@@ -123,7 +121,6 @@ import 'package:todo_app/constants.dart';
 //}
 
 class TodoList extends StatelessWidget {
-
   List<TodoTable> taskList;
   String selectedDate;
   static final DateFormat _weekdayFormat = new DateFormat("EEEE");
@@ -139,27 +136,30 @@ class TodoList extends StatelessWidget {
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: RichText(
-            text: TextSpan(
-                text: weekDay,
-                style: TextStyle(
-                  fontFamily: 'OpenSans-Light',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 18.0,
-                ),
-                children: [
-                  TextSpan(
-                    text: date,
-                    style: TextStyle(
-                        fontFamily: 'OpenSans-Light',
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black,
-                        fontSize: 15.0),
-                  )
-                ]),
+        Container(
+          height: 25.0,
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: RichText(
+              text: TextSpan(
+                  text: weekDay,
+                  style: TextStyle(
+                    fontFamily: 'OpenSans-Light',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 18.0,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: date,
+                      style: TextStyle(
+                          fontFamily: 'OpenSans-Light',
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                          fontSize: 15.0),
+                    )
+                  ]),
+            ),
           ),
         ),
         taskList == null
@@ -168,34 +168,47 @@ class TodoList extends StatelessWidget {
                   child: Text('No Tasks Found'),
                 ),
               )
-            : SingleChildScrollView(
-                child: Container(
-                    child: new Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: todoTaskList
-                )),
+            : Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: todoTaskList,
+                ),
               )
       ],
     );
   }
-  List<Widget> get todoTaskList {
 
-    List<Widget> result  = [];
+  List<Widget> get todoTaskList {
+    List<Widget> result = [];
+    int i = 1;
+    if (taskList.length == 1) {
+      result.add(TodoItem(
+          taskList[0].todoTask,
+          taskList[0].category,
+          taskList[0].time,
+          Color(taskList[0].color),
+          taskList[0].isDone == 1 ? true : false,
+          true,
+          true));
+      return result;
+    }
 
     taskList.forEach((item) {
-      result.add(TodoItem(
-          item.todoTask,
-          item.category,
-          '09:00',
-          Color(item.color),
-          false,
-          false,
-          true));
+      if (i == 1) {
+        result.add(TodoItem(item.todoTask, item.category, taskList[0].time,
+            Color(item.color), item.isDone == 1 ? true : false, true, false));
+      } else if (i == taskList.length) {
+        result.add(TodoItem(item.todoTask, item.category, taskList[0].time,
+            Color(item.color), item.isDone == 1 ? true : false, false, true));
+      } else {
+        result.add(TodoItem(item.todoTask, item.category, taskList[0].time,
+            Color(item.color), item.isDone == 1 ? true : false, false, false));
+      }
+      i++;
     });
     return result;
   }
 }
-
 
 class TodoItem extends StatefulWidget {
   String todo, category, time;
@@ -214,7 +227,6 @@ class _CalendarItemState extends State<TodoItem> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-
         setState(() {
           if (widget.isDone)
             widget.isDone = false;
